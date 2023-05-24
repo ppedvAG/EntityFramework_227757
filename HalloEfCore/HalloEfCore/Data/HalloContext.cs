@@ -1,5 +1,7 @@
 ﻿using HalloEfCore.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace HalloEfCore.Data
 {
@@ -13,16 +15,24 @@ namespace HalloEfCore.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConnectionString);
+
+            optionsBuilder.UseSqlServer(ConnectionString)
+                          .LogTo(msg => Debug.WriteLine(msg), LogLevel.Information)
+#if DEBUG
+                          .EnableSensitiveDataLogging()
+                          .EnableDetailedErrors();
+#else
+            ;
+#endif
+
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             //modelBuilder.Entity<Person>().ToTable("Person").UseTpcMappingStrategy();
             //TpCT
             modelBuilder.Entity<Employee>().ToTable("Emplyoees");
             modelBuilder.Entity<Customer>().ToTable("Customers");
-            
+
         }
 
     }

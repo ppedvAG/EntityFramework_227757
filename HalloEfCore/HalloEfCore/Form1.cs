@@ -1,5 +1,8 @@
 using HalloEfCore.Data;
 using HalloEfCore.Model;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using System.Diagnostics;
 
 namespace HalloEfCore
 {
@@ -48,6 +51,39 @@ namespace HalloEfCore
             con.Add(cust);
 
             con.SaveChanges();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var con = new HalloContext();
+
+            var query = con.Employees;//rderBy(x=>x.Name);
+
+
+            dataGridView1.DataSource = query.ToList();
+
+            Debug.WriteLine(query.ToQueryString());
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var con = new HalloContext();
+
+            var query = from emp in con.Employees
+                        where emp.Salary > 1000
+                        orderby emp.Salary
+                        select emp;
+
+            dataGridView1.DataSource = query.ToList();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            var con = new HalloContext();
+
+            var bestEmp = con.Employees.FirstOrDefault(x => x.Name.StartsWith("A"));
+
+            MessageBox.Show(bestEmp.Name);
         }
     }
 }
