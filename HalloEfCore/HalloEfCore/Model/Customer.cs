@@ -4,6 +4,6 @@
     {
         public string Address { get; set; } = string.Empty;
 
-        public Employee? Employee { get; set; }
+        public virtual Employee? Employee { get; set; }
     }
 }

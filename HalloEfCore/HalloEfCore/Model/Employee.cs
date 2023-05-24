@@ -4,8 +4,8 @@
     {
         public decimal Salary { get; set; }
 
-        public ICollection<Department> Departments { get; set; } = new HashSet<Department>();
+        public virtual ICollection<Department> Departments { get; set; } = new HashSet<Department>();
 
-        public ICollection<Customer> Customers { get; set; } = new HashSet<Customer>();
+        public virtual ICollection<Customer> Customers { get; set; } = new HashSet<Customer>();
     }
 }

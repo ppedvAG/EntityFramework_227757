@@ -1,9 +1,7 @@
 using HalloEfCore.Data;
 using HalloEfCore.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using System.Diagnostics;
-using System.Drawing;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace HalloEfCore
@@ -34,7 +32,8 @@ namespace HalloEfCore
         {
 
 
-            con.Employees.AddRange(DemoData.GetDemoEmployees(customers: DemoData.GetDemoCustomers()));
+            con.Employees.AddRange(DemoData.GetDemoEmployees(customers: DemoData.GetDemoCustomers(),
+                                                             departments: DemoData.GetDemoDepartments()));
             //con.Customers.AddRange(DemoData.GetDemoCustomers());
 
             con.SaveChanges();
@@ -58,10 +57,22 @@ namespace HalloEfCore
         private void button2_Click(object sender, EventArgs e)
         {
 
-            var query = con.Employees;//rderBy(x=>x.Name);
+            var query = con.Employees;
 
 
-            dataGridView1.DataSource = query.Include(x => x.Customers).ToList();
+            dataGridView1.DataSource = query.Include(x => x.Customers).Include(x => x.Departments).ToList();
+
+            Debug.WriteLine(query.ToQueryString());
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            var query = con.Employees;
+
+
+            dataGridView1.DataSource = query.Include(x => x.Customers)
+                                            .Include(x => x.Departments)
+                                            .AsSplitQuery().ToList();
 
             Debug.WriteLine(query.ToQueryString());
         }
@@ -123,6 +134,8 @@ namespace HalloEfCore
 
             int affectedRows = con.SaveChanges();
             MessageBox.Show($"{affectedRows} Rows changed");
+
+            con = new HalloContext();
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -141,14 +154,53 @@ namespace HalloEfCore
                 e.Value = string.Join(", ", customers.Select(x => x.Name));
             }
 
+            if (e.Value is IEnumerable<Department> deps)
+            {
+                e.Value = string.Join(", ", deps.Select(x => x.Name));
+            }
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if(dataGridView1.CurrentRow.DataBoundItem is Employee em)
+            if (dataGridView1.CurrentRow.DataBoundItem is Employee em)
             {
                 con.Entry(em).Collection(x => x.Customers).Load(); //explizit Customers laden
                 MessageBox.Show($"{em.Name}\n{string.Join(", ", em.Customers.Select(x => x.Name))}");
+            }
+        }
+        int itemsPerPage = 10;
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            LadePagesOfEmployee(0);
+
+            BuildPageLinks();
+        }
+
+        private void LadePagesOfEmployee(int pageIndex)
+        {
+            dataGridView1.DataSource = con.Employees.Skip(pageIndex)
+                                                    .Take(itemsPerPage)
+                                                    .Include(x => x.Customers)
+                                                    .Include(x => x.Departments)
+                                                    .ToList();
+        }
+
+        private void BuildPageLinks()
+        {
+            var empCount = con.Employees.Count();
+
+            flowLayoutPanel2.Controls.Clear();
+
+            if (empCount > 0)
+            {
+                for (int i = 0; i < empCount / itemsPerPage; i++)
+                {
+                    var ll = new LinkLabel() { Text = $"{i + 1}", AutoSize = true };
+                    int toSkip = i * itemsPerPage;
+                    ll.Click += (s, e) => { LadePagesOfEmployee(toSkip); };
+                    flowLayoutPanel2.Controls.Add(ll);
+                }
             }
         }
     }

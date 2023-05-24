@@ -18,6 +18,7 @@ namespace HalloEfCore.Data
         {
 
             optionsBuilder.UseSqlServer(ConnectionString)
+                          .UseLazyLoadingProxies()
                           .LogTo(msg => Debug.WriteLine(msg), LogLevel.Information)
 #if DEBUG
                           .EnableSensitiveDataLogging()

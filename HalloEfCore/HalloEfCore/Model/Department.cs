@@ -7,7 +7,7 @@ namespace HalloEfCore.Model
 
         public string Name { get; set; } = string.Empty;
 
-        public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
+        public virtual ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
         
 
     }

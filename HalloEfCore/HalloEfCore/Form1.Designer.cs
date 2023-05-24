@@ -33,10 +33,13 @@
             button5 = new Button();
             button7 = new Button();
             button2 = new Button();
+            button8 = new Button();
             button3 = new Button();
             button4 = new Button();
             button6 = new Button();
+            button9 = new Button();
             dataGridView1 = new DataGridView();
+            flowLayoutPanel2 = new FlowLayoutPanel();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
@@ -50,13 +53,15 @@
             flowLayoutPanel1.Controls.Add(button5);
             flowLayoutPanel1.Controls.Add(button7);
             flowLayoutPanel1.Controls.Add(button2);
+            flowLayoutPanel1.Controls.Add(button8);
             flowLayoutPanel1.Controls.Add(button3);
             flowLayoutPanel1.Controls.Add(button4);
             flowLayoutPanel1.Controls.Add(button6);
+            flowLayoutPanel1.Controls.Add(button9);
             flowLayoutPanel1.Dock = DockStyle.Top;
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(1070, 96);
+            flowLayoutPanel1.Size = new Size(1070, 144);
             flowLayoutPanel1.TabIndex = 0;
             // 
             // button1
@@ -107,11 +112,23 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // button8
+            // 
+            button8.AutoSize = true;
+            button8.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button8.Location = new Point(3, 51);
+            button8.Name = "button8";
+            button8.Size = new Size(494, 42);
+            button8.TabIndex = 7;
+            button8.Text = "Load Employees (Eager Loading) SPlit Query";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
+            // 
             // button3
             // 
             button3.AutoSize = true;
             button3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button3.Location = new Point(3, 51);
+            button3.Location = new Point(503, 51);
             button3.Name = "button3";
             button3.Size = new Size(211, 42);
             button3.TabIndex = 2;
@@ -123,7 +140,7 @@
             // 
             button4.AutoSize = true;
             button4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button4.Location = new Point(220, 51);
+            button4.Location = new Point(720, 51);
             button4.Name = "button4";
             button4.Size = new Size(269, 42);
             button4.TabIndex = 3;
@@ -135,7 +152,7 @@
             // 
             button6.AutoSize = true;
             button6.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button6.Location = new Point(495, 51);
+            button6.Location = new Point(3, 99);
             button6.Name = "button6";
             button6.Size = new Size(178, 42);
             button6.TabIndex = 5;
@@ -143,18 +160,41 @@
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
             // 
+            // button9
+            // 
+            button9.AutoSize = true;
+            button9.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button9.Location = new Point(187, 99);
+            button9.Name = "button9";
+            button9.Size = new Size(163, 42);
+            button9.TabIndex = 8;
+            button9.Text = "Query paged";
+            button9.UseVisualStyleBackColor = true;
+            button9.Click += button9_Click;
+            // 
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(0, 96);
+            dataGridView1.Location = new Point(0, 144);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 82;
             dataGridView1.RowTemplate.Height = 41;
-            dataGridView1.Size = new Size(1070, 500);
+            dataGridView1.Size = new Size(1070, 452);
             dataGridView1.TabIndex = 1;
             dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
             dataGridView1.CellFormatting += dataGridView1_CellFormatting;
+            // 
+            // flowLayoutPanel2
+            // 
+            flowLayoutPanel2.AutoSize = true;
+            flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel2.BackColor = Color.PaleTurquoise;
+            flowLayoutPanel2.Dock = DockStyle.Top;
+            flowLayoutPanel2.Location = new Point(0, 144);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Size = new Size(1070, 0);
+            flowLayoutPanel2.TabIndex = 2;
             // 
             // Form1
             // 
@@ -162,6 +202,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1070, 596);
             Controls.Add(dataGridView1);
+            Controls.Add(flowLayoutPanel2);
             Controls.Add(flowLayoutPanel1);
             Name = "Form1";
             Text = "Form1";
@@ -183,5 +224,8 @@
         private Button button5;
         private Button button6;
         private Button button7;
+        private Button button8;
+        private Button button9;
+        private FlowLayoutPanel flowLayoutPanel2;
     }
 }
