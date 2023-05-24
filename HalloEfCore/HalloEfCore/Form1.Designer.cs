@@ -31,11 +31,12 @@
             flowLayoutPanel1 = new FlowLayoutPanel();
             button1 = new Button();
             button5 = new Button();
+            button7 = new Button();
             button2 = new Button();
             button3 = new Button();
             button4 = new Button();
-            dataGridView1 = new DataGridView();
             button6 = new Button();
+            dataGridView1 = new DataGridView();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
@@ -47,6 +48,7 @@
             flowLayoutPanel1.BackColor = Color.LightSalmon;
             flowLayoutPanel1.Controls.Add(button1);
             flowLayoutPanel1.Controls.Add(button5);
+            flowLayoutPanel1.Controls.Add(button7);
             flowLayoutPanel1.Controls.Add(button2);
             flowLayoutPanel1.Controls.Add(button3);
             flowLayoutPanel1.Controls.Add(button4);
@@ -81,15 +83,27 @@
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
             // 
+            // button7
+            // 
+            button7.AutoSize = true;
+            button7.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button7.Location = new Point(316, 3);
+            button7.Name = "button7";
+            button7.Size = new Size(204, 42);
+            button7.TabIndex = 6;
+            button7.Text = "Load Employees ";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
+            // 
             // button2
             // 
             button2.AutoSize = true;
             button2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button2.Location = new Point(316, 3);
+            button2.Location = new Point(526, 3);
             button2.Name = "button2";
-            button2.Size = new Size(197, 42);
+            button2.Size = new Size(369, 42);
             button2.TabIndex = 1;
-            button2.Text = "Load Employees";
+            button2.Text = "Load Employees (Eager Loading)";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
@@ -97,7 +111,7 @@
             // 
             button3.AutoSize = true;
             button3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button3.Location = new Point(519, 3);
+            button3.Location = new Point(3, 51);
             button3.Name = "button3";
             button3.Size = new Size(211, 42);
             button3.TabIndex = 2;
@@ -109,13 +123,25 @@
             // 
             button4.AutoSize = true;
             button4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button4.Location = new Point(736, 3);
+            button4.Location = new Point(220, 51);
             button4.Name = "button4";
             button4.Size = new Size(269, 42);
             button4.TabIndex = 3;
             button4.Text = "Den besten Employees";
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
+            // 
+            // button6
+            // 
+            button6.AutoSize = true;
+            button6.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button6.Location = new Point(495, 51);
+            button6.Name = "button6";
+            button6.Size = new Size(178, 42);
+            button6.TabIndex = 5;
+            button6.Text = "Attach manual";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
             // 
             // dataGridView1
             // 
@@ -127,18 +153,8 @@
             dataGridView1.RowTemplate.Height = 41;
             dataGridView1.Size = new Size(1070, 500);
             dataGridView1.TabIndex = 1;
-            // 
-            // button6
-            // 
-            button6.AutoSize = true;
-            button6.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button6.Location = new Point(3, 51);
-            button6.Name = "button6";
-            button6.Size = new Size(178, 42);
-            button6.TabIndex = 5;
-            button6.Text = "Attach manual";
-            button6.UseVisualStyleBackColor = true;
-            button6.Click += button6_Click;
+            dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
+            dataGridView1.CellFormatting += dataGridView1_CellFormatting;
             // 
             // Form1
             // 
@@ -166,5 +182,6 @@
         private Button button4;
         private Button button5;
         private Button button6;
+        private Button button7;
     }
 }

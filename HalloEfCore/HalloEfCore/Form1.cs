@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System.Diagnostics;
 using System.Drawing;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace HalloEfCore
 {
@@ -33,8 +34,8 @@ namespace HalloEfCore
         {
 
 
-            con.Employees.AddRange(DemoData.GetDemoEmployees());
-            con.Customers.AddRange(DemoData.GetDemoCustomers());
+            con.Employees.AddRange(DemoData.GetDemoEmployees(customers: DemoData.GetDemoCustomers()));
+            //con.Customers.AddRange(DemoData.GetDemoCustomers());
 
             con.SaveChanges();
         }
@@ -60,9 +61,14 @@ namespace HalloEfCore
             var query = con.Employees;//rderBy(x=>x.Name);
 
 
-            dataGridView1.DataSource = query.ToList();
+            dataGridView1.DataSource = query.Include(x => x.Customers).ToList();
 
             Debug.WriteLine(query.ToQueryString());
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = con.Employees.ToList();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -123,9 +129,27 @@ namespace HalloEfCore
         {
 
             var emp = con.Employees.FirstOrDefault();
-            var changedEmp = new Employee() { Id=emp.Id,  Name = "CHÄNGED", Salary = 34287645.2234m };
+            var changedEmp = new Employee() { Id = emp.Id, Name = "CHÄNGED", Salary = 34287645.2234m };
             con.ChangeTracker.Entries().FirstOrDefault(x => x.Entity == emp).CurrentValues.SetValues(changedEmp);
             con.SaveChanges();
+        }
+
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.Value is IEnumerable<Customer> customers)
+            {
+                e.Value = string.Join(", ", customers.Select(x => x.Name));
+            }
+
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if(dataGridView1.CurrentRow.DataBoundItem is Employee em)
+            {
+                con.Entry(em).Collection(x => x.Customers).Load(); //explizit Customers laden
+                MessageBox.Show($"{em.Name}\n{string.Join(", ", em.Customers.Select(x => x.Name))}");
+            }
         }
     }
 }
