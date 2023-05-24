@@ -3,6 +3,7 @@ using HalloEfCore.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace HalloEfCore
 {
@@ -13,9 +14,10 @@ namespace HalloEfCore
             InitializeComponent();
         }
 
+        HalloContext con = new HalloContext();
+
         private void button1_Click(object sender, EventArgs e)
         {
-            var con = new HalloContext();
             con.Database.EnsureDeleted();
             con.Database.EnsureCreated();
 
@@ -29,7 +31,7 @@ namespace HalloEfCore
 
         private void AddBogusDemoDaten()
         {
-            var con = new HalloContext();
+
 
             con.Employees.AddRange(DemoData.GetDemoEmployees());
             con.Customers.AddRange(DemoData.GetDemoCustomers());
@@ -39,7 +41,6 @@ namespace HalloEfCore
 
         private void MakeDemoData()
         {
-            var con = new HalloContext();
 
             var p = new Person() { Name = "Nur eine Person" };
             con.Add(p);
@@ -55,7 +56,6 @@ namespace HalloEfCore
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var con = new HalloContext();
 
             var query = con.Employees;//rderBy(x=>x.Name);
 
@@ -67,7 +67,6 @@ namespace HalloEfCore
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var con = new HalloContext();
 
             var query = from emp in con.Employees
                         where emp.Salary > 1000
@@ -79,11 +78,54 @@ namespace HalloEfCore
 
         private void button4_Click(object sender, EventArgs e)
         {
-            var con = new HalloContext();
-
             var bestEmp = con.Employees.FirstOrDefault(x => x.Name.StartsWith("A"));
 
+            con.ChangeTracker.Entries().FirstOrDefault(x => x.Entity == bestEmp).State = EntityState.Detached;
+
+
+            bestEmp.Salary += 1;
+            bestEmp.Salary += 1;
+            bestEmp.Salary += 1;
+            bestEmp.Salary += 1;
+            bestEmp.Salary += 1;
+            bestEmp.Salary += 1;
+            bestEmp.Salary += 1;
+            bestEmp.Salary += 1;
+            bestEmp.Salary += 1;
+            bestEmp.Salary += 1;
+
+            bestEmp.Id = 0;
+            con.Attach(bestEmp);
+
+            con.ChangeTracker.Entries().FirstOrDefault(x => x.Entity == bestEmp).State = EntityState.Added;
+
+
+
+            con.SaveChanges();
+
+
             MessageBox.Show(bestEmp.Name);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+            foreach (var enn in con.ChangeTracker.Entries())
+            {
+                Debug.WriteLine($"{enn.Entity.GetType()} {enn.State}");
+            }
+
+            int affectedRows = con.SaveChanges();
+            MessageBox.Show($"{affectedRows} Rows changed");
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+            var emp = con.Employees.FirstOrDefault();
+            var changedEmp = new Employee() { Id=emp.Id,  Name = "CHÄNGED", Salary = 34287645.2234m };
+            con.ChangeTracker.Entries().FirstOrDefault(x => x.Entity == emp).CurrentValues.SetValues(changedEmp);
+            con.SaveChanges();
         }
     }
 }

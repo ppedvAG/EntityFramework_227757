@@ -30,10 +30,12 @@
         {
             flowLayoutPanel1 = new FlowLayoutPanel();
             button1 = new Button();
+            button5 = new Button();
             button2 = new Button();
             button3 = new Button();
-            dataGridView1 = new DataGridView();
             button4 = new Button();
+            dataGridView1 = new DataGridView();
+            button6 = new Button();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
@@ -44,13 +46,15 @@
             flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             flowLayoutPanel1.BackColor = Color.LightSalmon;
             flowLayoutPanel1.Controls.Add(button1);
+            flowLayoutPanel1.Controls.Add(button5);
             flowLayoutPanel1.Controls.Add(button2);
             flowLayoutPanel1.Controls.Add(button3);
             flowLayoutPanel1.Controls.Add(button4);
+            flowLayoutPanel1.Controls.Add(button6);
             flowLayoutPanel1.Dock = DockStyle.Top;
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(1070, 48);
+            flowLayoutPanel1.Size = new Size(1070, 96);
             flowLayoutPanel1.TabIndex = 0;
             // 
             // button1
@@ -65,11 +69,23 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
+            // button5
+            // 
+            button5.AutoSize = true;
+            button5.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button5.Location = new Point(205, 3);
+            button5.Name = "button5";
+            button5.Size = new Size(105, 42);
+            button5.TabIndex = 4;
+            button5.Text = "Save all";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
             // button2
             // 
             button2.AutoSize = true;
             button2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button2.Location = new Point(205, 3);
+            button2.Location = new Point(316, 3);
             button2.Name = "button2";
             button2.Size = new Size(197, 42);
             button2.TabIndex = 1;
@@ -81,7 +97,7 @@
             // 
             button3.AutoSize = true;
             button3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button3.Location = new Point(408, 3);
+            button3.Location = new Point(519, 3);
             button3.Name = "button3";
             button3.Size = new Size(211, 42);
             button3.TabIndex = 2;
@@ -89,28 +105,40 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
-            // dataGridView1
-            // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(0, 48);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 82;
-            dataGridView1.RowTemplate.Height = 41;
-            dataGridView1.Size = new Size(1070, 548);
-            dataGridView1.TabIndex = 1;
-            // 
             // button4
             // 
             button4.AutoSize = true;
             button4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button4.Location = new Point(625, 3);
+            button4.Location = new Point(736, 3);
             button4.Name = "button4";
             button4.Size = new Size(269, 42);
             button4.TabIndex = 3;
             button4.Text = "Den besten Employees";
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Dock = DockStyle.Fill;
+            dataGridView1.Location = new Point(0, 96);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersWidth = 82;
+            dataGridView1.RowTemplate.Height = 41;
+            dataGridView1.Size = new Size(1070, 500);
+            dataGridView1.TabIndex = 1;
+            // 
+            // button6
+            // 
+            button6.AutoSize = true;
+            button6.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button6.Location = new Point(3, 51);
+            button6.Name = "button6";
+            button6.Size = new Size(178, 42);
+            button6.TabIndex = 5;
+            button6.Text = "Attach manual";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
             // 
             // Form1
             // 
@@ -136,5 +164,7 @@
         private Button button2;
         private Button button3;
         private Button button4;
+        private Button button5;
+        private Button button6;
     }
 }
