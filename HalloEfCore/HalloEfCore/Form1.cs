@@ -203,5 +203,18 @@ namespace HalloEfCore
                 }
             }
         }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = con.Departments.FromSql($"SELECT * FROM Departments").ToList();
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+
+            //dataGridView1.DataSource = con.Persons.FromSql($"SELECT [Id],[Name],[Discriminator],[Address],[EmployeeId],[Salary] FROM  [Persons] WHERE Name LIKE '%'+{textBox1.Text}+'%' Order by dbo.LEVENSHTEIN(Name,{textBox1.Text}) ").ToList();
+            dataGridView1.DataSource = con.Persons.FromSql($"SELECT Id,[Name],[Discriminator],[Address],[EmployeeId],[Salary] FROM  [Persons] Order by dbo.LEVENSHTEIN(Name,{textBox1.Text}),Name DESC").ToList();
+
+        }
     }
 }

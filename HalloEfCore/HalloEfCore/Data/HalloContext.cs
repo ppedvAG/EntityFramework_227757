@@ -30,10 +30,10 @@ namespace HalloEfCore.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Person>().ToTable("Person").UseTpcMappingStrategy();
+            modelBuilder.Entity<Person>().ToTable("Person");
             //TpCT
-            modelBuilder.Entity<Employee>().ToTable("Emplyoees");
-            modelBuilder.Entity<Customer>().ToTable("Customers");
+            //modelBuilder.Entity<Employee>().ToTable("Emplyoees");
+            //modelBuilder.Entity<Customer>().ToTable("Customers");
 
         }
 

@@ -38,10 +38,17 @@
             button4 = new Button();
             button6 = new Button();
             button9 = new Button();
+            button10 = new Button();
             dataGridView1 = new DataGridView();
             flowLayoutPanel2 = new FlowLayoutPanel();
+            groupBox1 = new GroupBox();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            textBox1 = new TextBox();
+            button11 = new Button();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            groupBox1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -58,10 +65,12 @@
             flowLayoutPanel1.Controls.Add(button4);
             flowLayoutPanel1.Controls.Add(button6);
             flowLayoutPanel1.Controls.Add(button9);
+            flowLayoutPanel1.Controls.Add(button10);
+            flowLayoutPanel1.Controls.Add(groupBox1);
             flowLayoutPanel1.Dock = DockStyle.Top;
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(1070, 144);
+            flowLayoutPanel1.Size = new Size(1070, 188);
             flowLayoutPanel1.TabIndex = 0;
             // 
             // button1
@@ -172,15 +181,27 @@
             button9.UseVisualStyleBackColor = true;
             button9.Click += button9_Click;
             // 
+            // button10
+            // 
+            button10.AutoSize = true;
+            button10.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button10.Location = new Point(356, 99);
+            button10.Name = "button10";
+            button10.Size = new Size(167, 42);
+            button10.TabIndex = 9;
+            button10.Text = "EXECUTE SQL";
+            button10.UseVisualStyleBackColor = true;
+            button10.Click += button10_Click;
+            // 
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(0, 144);
+            dataGridView1.Location = new Point(0, 188);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 82;
             dataGridView1.RowTemplate.Height = 41;
-            dataGridView1.Size = new Size(1070, 452);
+            dataGridView1.Size = new Size(1070, 408);
             dataGridView1.TabIndex = 1;
             dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
             dataGridView1.CellFormatting += dataGridView1_CellFormatting;
@@ -191,10 +212,58 @@
             flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             flowLayoutPanel2.BackColor = Color.PaleTurquoise;
             flowLayoutPanel2.Dock = DockStyle.Top;
-            flowLayoutPanel2.Location = new Point(0, 144);
+            flowLayoutPanel2.Location = new Point(0, 188);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
             flowLayoutPanel2.Size = new Size(1070, 0);
             flowLayoutPanel2.TabIndex = 2;
+            // 
+            // groupBox1
+            // 
+            groupBox1.AutoSize = true;
+            groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox1.Controls.Add(tableLayoutPanel1);
+            groupBox1.Location = new Point(529, 99);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(307, 86);
+            groupBox1.TabIndex = 10;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Levenshtein ";
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(textBox1, 0, 0);
+            tableLayoutPanel1.Controls.Add(button11, 1, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 35);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(301, 48);
+            tableLayoutPanel1.TabIndex = 0;
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(3, 3);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(200, 39);
+            textBox1.TabIndex = 0;
+            // 
+            // button11
+            // 
+            button11.AutoSize = true;
+            button11.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button11.Location = new Point(209, 3);
+            button11.Name = "button11";
+            button11.Size = new Size(89, 42);
+            button11.TabIndex = 1;
+            button11.Text = "Suche";
+            button11.UseVisualStyleBackColor = true;
+            button11.Click += button11_Click;
             // 
             // Form1
             // 
@@ -209,6 +278,10 @@
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -227,5 +300,10 @@
         private Button button8;
         private Button button9;
         private FlowLayoutPanel flowLayoutPanel2;
+        private Button button10;
+        private GroupBox groupBox1;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TextBox textBox1;
+        private Button button11;
     }
 }
