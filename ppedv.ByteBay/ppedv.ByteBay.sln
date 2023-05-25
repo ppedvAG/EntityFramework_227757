@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.33711.374
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.ByteBay.Model", "ppedv.ByteBay.Model\ppedv.ByteBay.Model.csproj", "{EDAC77F9-87ED-4ECD-89C1-904B9BEEA314}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.ByteBay.Data.EfCore", "ppedv.ByteBay.Data.EfCore\ppedv.ByteBay.Data.EfCore.csproj", "{DBABD8DC-832F-4961-B743-D950E41882AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{EDAC77F9-87ED-4ECD-89C1-904B9BEEA314}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDAC77F9-87ED-4ECD-89C1-904B9BEEA314}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDAC77F9-87ED-4ECD-89C1-904B9BEEA314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBABD8DC-832F-4961-B743-D950E41882AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBABD8DC-832F-4961-B743-D950E41882AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBABD8DC-832F-4961-B743-D950E41882AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBABD8DC-832F-4961-B743-D950E41882AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
