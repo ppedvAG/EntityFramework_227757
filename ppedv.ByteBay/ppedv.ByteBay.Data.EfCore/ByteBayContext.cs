@@ -28,5 +28,30 @@ namespace ppedv.ByteBay.Data.EfCore
                           .EnableSensitiveDataLogging()
                           .EnableDetailedErrors();
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Bestellung>().ToTable("Orders");
+
+            modelBuilder.Entity<Bestellung>().HasOne(x => x.Lieferadresse)
+                                             .WithMany(x => x.BestellungenAlsLieferadresse);
+
+            modelBuilder.Entity<Bestellung>().HasOne(x => x.Rechnungsadresse)
+                                             .WithMany(x => x.BestellungenAlsRechnungsadresse);
+
+            modelBuilder.Entity<Produkt>().HasMany(x => x.Lieferanten)
+                                          .WithMany(x => x.Produkte)
+                                          .UsingEntity("LPs",
+                                                 l => l.HasOne(typeof(Lieferant)).WithMany().HasForeignKey("LId"),
+                                                 r => r.HasOne(typeof(Produkt)).WithMany().HasForeignKey("Pid"));
+
+
+            //modelBuilder.Entity<Adresse>().HasMany(x => x.BestellungenAlsLieferadresse)
+            //                              .WithOne(x => x.Lieferadresse);
+
+            //modelBuilder.Entity<Adresse>().HasMany(x => x.BestellungenAlsRechnungsadresse)
+            //                              .WithOne(x => x.Rechnungsadresse);
+
+        }
     }
 }

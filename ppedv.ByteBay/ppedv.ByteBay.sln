@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.33711.374
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.ByteBay.Model", "ppedv.ByteBay.Model\ppedv.ByteBay.Model.csproj", "{EDAC77F9-87ED-4ECD-89C1-904B9BEEA314}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ppedv.ByteBay.Model", "ppedv.ByteBay.Model\ppedv.ByteBay.Model.csproj", "{EDAC77F9-87ED-4ECD-89C1-904B9BEEA314}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.ByteBay.Data.EfCore", "ppedv.ByteBay.Data.EfCore\ppedv.ByteBay.Data.EfCore.csproj", "{DBABD8DC-832F-4961-B743-D950E41882AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ppedv.ByteBay.Data.EfCore", "ppedv.ByteBay.Data.EfCore\ppedv.ByteBay.Data.EfCore.csproj", "{DBABD8DC-832F-4961-B743-D950E41882AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.ByteBay.Data.EfCore.Tests", "ppedv.ByteBay.Data.EfCore.Tests\ppedv.ByteBay.Data.EfCore.Tests.csproj", "{A3A7748B-8732-44ED-BA7C-1C496795969F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DBABD8DC-832F-4961-B743-D950E41882AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBABD8DC-832F-4961-B743-D950E41882AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBABD8DC-832F-4961-B743-D950E41882AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3A7748B-8732-44ED-BA7C-1C496795969F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3A7748B-8732-44ED-BA7C-1C496795969F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3A7748B-8732-44ED-BA7C-1C496795969F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3A7748B-8732-44ED-BA7C-1C496795969F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
