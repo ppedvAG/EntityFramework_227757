@@ -45,7 +45,9 @@ namespace ppedv.ByteBay.Data.EfCore
                                                  l => l.HasOne(typeof(Lieferant)).WithMany().HasForeignKey("LId"),
                                                  r => r.HasOne(typeof(Produkt)).WithMany().HasForeignKey("Pid"));
 
-
+            modelBuilder.Entity<Bestellung>().HasMany(x => x.Positionen)
+                                             .WithOne(x => x.Bestellung)
+                                             .OnDelete(DeleteBehavior.Cascade);
             //modelBuilder.Entity<Adresse>().HasMany(x => x.BestellungenAlsLieferadresse)
             //                              .WithOne(x => x.Lieferadresse);
 

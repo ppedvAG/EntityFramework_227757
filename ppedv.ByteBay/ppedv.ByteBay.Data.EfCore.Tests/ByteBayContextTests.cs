@@ -1,6 +1,7 @@
 using AutoFixture;
 using AutoFixture.Kernel;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using ppedv.ByteBay.Model;
 using System.Reflection;
 
@@ -129,6 +130,118 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
                 loaded.Should().BeEquivalentTo(prod, x => x.IgnoringCyclicReferences());
             }
         }
+
+        [Fact]
+        public void Delete_Addresse_should_throw_exception_if_used_in_Bestellung()
+        {
+            var adr = new Adresse() { Zeile1 = "Test123" };
+            var best = new Bestellung() { Lieferadresse = adr };
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Add(best);
+                con.SaveChanges().Should().Be(2);
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                var loadedAdr = con.Adressen.Find(adr.Id);
+                con.Remove(loadedAdr);
+                //Assert.Throws<DbUpdateException>(() => con.SaveChanges());
+
+                Action act = () => con.SaveChanges();
+                act.Should().Throw<DbUpdateException>();
+            }
+        }
+
+        [Fact]
+        public void Delete_Addresse_and_bestellung_should_work()
+        {
+            var adr = new Adresse() { Zeile1 = "Test123" };
+            var best = new Bestellung() { Lieferadresse = adr };
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Add(best);
+                con.SaveChanges().Should().Be(2);
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                var loadedAdr = con.Adressen.Find(adr.Id);
+                var loadedBest = con.Bestellung.Find(best.Id);
+                con.Remove(loadedBest);
+                con.Remove(loadedAdr);
+
+                con.SaveChanges().Should().Be(2);
+            }
+        }
+
+
+        [Fact]
+        public void Delete_Bestllung_should_delete_all_BestellPositionen()
+        {
+            var prod = new Produkt();
+            var best = new Bestellung();
+            var pos1 = new BestellPosition() { Bestellung = best, Produkt = prod };
+            var pos2 = new BestellPosition() { Bestellung = best, Produkt = prod };
+
+            using (var con = new ByteBayContext(conString))
+            {
+                //con.Add(best);
+                con.Add(pos1);
+                con.Add(pos2);
+                con.SaveChanges().Should().Be(4);
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                var loadedBest = con.Bestellung.Find(best.Id);
+                con.Remove(loadedBest);
+                
+                con.SaveChanges().Should().Be(1);
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Bestellung.Find(best.Id).Should().BeNull();
+                con.BestellPositionen.Find(pos1.Id).Should().BeNull();
+                con.BestellPositionen.Find(pos2.Id).Should().BeNull();
+                con.Produkte.Find(prod.Id).Should().NotBeNull();
+            }
+        }
+
+        [Fact]
+        public void Delete_BestellungPosition_should_be_ok()
+        {
+            var prod = new Produkt();
+            var best = new Bestellung();
+            var pos1 = new BestellPosition() { Bestellung = best, Produkt = prod };
+            var pos2 = new BestellPosition() { Bestellung = best, Produkt = prod };
+
+            using (var con = new ByteBayContext(conString))
+            {
+                //con.Add(best);
+                con.Add(pos1);
+                con.Add(pos2);
+                con.SaveChanges().Should().Be(4);
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                var loadedBestPos = con.BestellPositionen.Find(pos2.Id);
+                con.Remove(loadedBestPos);
+
+                con.SaveChanges().Should().Be(1);
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Bestellung.Find(best.Id).Should().NotBeNull();
+                con.BestellPositionen.Find(pos1.Id).Should().NotBeNull();
+                con.BestellPositionen.Find(pos2.Id).Should().BeNull();
+                con.Produkte.Find(prod.Id).Should().NotBeNull();
+            }
+        }
+
     }
 
     internal class PropertyNameOmitter : ISpecimenBuilder
