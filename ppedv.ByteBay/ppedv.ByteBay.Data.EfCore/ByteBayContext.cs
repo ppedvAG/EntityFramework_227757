@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using ppedv.ByteBay.Model;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace ppedv.ByteBay.Data.EfCore
 {
@@ -29,8 +31,49 @@ namespace ppedv.ByteBay.Data.EfCore
                           .EnableDetailedErrors();
         }
 
+        public override int SaveChanges()
+        {
+
+            foreach (var item in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted))
+            {
+                if (item.Entity is Entity entity)
+                {
+                    entity.IsDeleted = true;
+                    item.State = EntityState.Modified;
+
+                    if(entity is Bestellung best)
+                    {
+                        foreach (var pos in best.Positionen)
+                        {
+                            pos.IsDeleted = true;
+                        }
+                    }
+                }
+            }
+            return base.SaveChanges();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<Entity>().HasQueryFilter(x => !x.IsDeleted);
+            
+            
+            Expression<Func<Entity, bool>> filterExpr = entity => !entity.IsDeleted;
+            foreach (var mutableEntityType in modelBuilder.Model.GetEntityTypes())
+            {
+                // check if current entity type is child of BaseModel
+                if (mutableEntityType.ClrType.IsAssignableTo(typeof(Entity)))
+                {
+                    // modify expression to handle correct child type
+                    var parameter = Expression.Parameter(mutableEntityType.ClrType);
+                    var body = ReplacingExpressionVisitor.Replace(filterExpr.Parameters.First(), parameter, filterExpr.Body);
+                    var lambdaExpression = Expression.Lambda(body, parameter);
+
+                    // set filter
+                    mutableEntityType.SetQueryFilter(lambdaExpression);
+                }
+            }
+
             modelBuilder.Entity<Bestellung>().ToTable("Orders");
 
             modelBuilder.Entity<Bestellung>().HasOne(x => x.Lieferadresse)
@@ -46,8 +89,9 @@ namespace ppedv.ByteBay.Data.EfCore
                                                  r => r.HasOne(typeof(Produkt)).WithMany().HasForeignKey("Pid"));
 
             modelBuilder.Entity<Bestellung>().HasMany(x => x.Positionen)
-                                             .WithOne(x => x.Bestellung)
-                                             .OnDelete(DeleteBehavior.Cascade);
+                                             .WithOne(x => x.Bestellung);
+                                             //.OnDelete(DeleteBehavior.Cascade);
+
             //modelBuilder.Entity<Adresse>().HasMany(x => x.BestellungenAlsLieferadresse)
             //                              .WithOne(x => x.Lieferadresse);
 

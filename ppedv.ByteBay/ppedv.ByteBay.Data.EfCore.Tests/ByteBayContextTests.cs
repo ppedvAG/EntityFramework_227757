@@ -132,7 +132,7 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
         }
 
         [Fact]
-        public void Delete_Addresse_should_throw_exception_if_used_in_Bestellung()
+        public void Delete_Addresse_should_be_set_to_isDeleted()
         {
             var adr = new Adresse() { Zeile1 = "Test123" };
             var best = new Bestellung() { Lieferadresse = adr };
@@ -146,10 +146,13 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
             {
                 var loadedAdr = con.Adressen.Find(adr.Id);
                 con.Remove(loadedAdr);
-                //Assert.Throws<DbUpdateException>(() => con.SaveChanges());
+                con.SaveChanges();
+            }
 
-                Action act = () => con.SaveChanges();
-                act.Should().Throw<DbUpdateException>();
+            using (var con = new ByteBayContext(conString))
+            {
+                var loadedAdr = con.Adressen.IgnoreQueryFilters().FirstOrDefault(x => x.Id == adr.Id);
+                loadedAdr.IsDeleted.Should().BeTrue();
             }
         }
 
@@ -196,16 +199,17 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
             {
                 var loadedBest = con.Bestellung.Find(best.Id);
                 con.Remove(loadedBest);
-                
-                con.SaveChanges().Should().Be(1);
+
+                con.SaveChanges().Should().Be(3);
             }
 
             using (var con = new ByteBayContext(conString))
             {
-                con.Bestellung.Find(best.Id).Should().BeNull();
-                con.BestellPositionen.Find(pos1.Id).Should().BeNull();
-                con.BestellPositionen.Find(pos2.Id).Should().BeNull();
-                con.Produkte.Find(prod.Id).Should().NotBeNull();
+                con.Bestellung.IgnoreQueryFilters().FirstOrDefault(x => x.Id == best.Id).IsDeleted.Should().BeTrue();
+                con.BestellPositionen.IgnoreQueryFilters().FirstOrDefault(x => x.Id == pos1.Id).IsDeleted.Should().BeTrue();
+                con.BestellPositionen.IgnoreQueryFilters().FirstOrDefault(x => x.Id == pos2.Id).IsDeleted.Should().BeTrue();
+                
+                con.Produkte.IgnoreQueryFilters().FirstOrDefault(x => x.Id == prod.Id).IsDeleted.Should().BeFalse();
             }
         }
 
@@ -239,6 +243,34 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
                 con.BestellPositionen.Find(pos1.Id).Should().NotBeNull();
                 con.BestellPositionen.Find(pos2.Id).Should().BeNull();
                 con.Produkte.Find(prod.Id).Should().NotBeNull();
+            }
+        }
+
+
+        [Fact]
+        public void Product_SoftDelete()
+        {
+            var prod = new Produkt();
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Add(prod);
+                con.SaveChanges().Should().Be(1);
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                var loaded = con.Produkte.Find(prod.Id);
+                con.Remove(loaded);
+                con.SaveChanges().Should().Be(1);
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                var loadedWithFilter = con.Produkte.Where(x => x.Id == prod.Id).FirstOrDefault();
+                loadedWithFilter.Should().BeNull();
+
+                var loadedWithoutFilter = con.Produkte.IgnoreQueryFilters().Where(x => x.Id == prod.Id).FirstOrDefault();
+                loadedWithoutFilter.Should().NotBeNull();
             }
         }
 
