@@ -206,7 +206,7 @@ namespace HalloEfCore
 
         private void button10_Click(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = con.Departments.FromSql($"SELECT * FROM Departments").ToList();
+            dataGridView1.DataSource = con.Departments.FromSql($"SELECT * FROM Departments").TagWith("Sonnenschwein").ToList();
         }
 
         private void button11_Click(object sender, EventArgs e)
