@@ -1,4 +1,8 @@
+using AutoFixture;
+using AutoFixture.Kernel;
+using FluentAssertions;
 using ppedv.ByteBay.Model;
+using System.Reflection;
 
 namespace ppedv.ByteBay.Data.EfCore.Tests
 {
@@ -90,14 +94,59 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
                 var loaded = con.Produkte.Find(prod.Id);
                 con.Remove(loaded);
                 var rows = con.SaveChanges();
-                Assert.Equal(1, rows);
+                //Assert.Equal(1, rows);
+                rows.Should().Be(1);
             }
 
             using (var con = new ByteBayContext(conString))
             {
                 var loaded = con.Produkte.Find(prod.Id);
-                Assert.Null(loaded);
+                //Assert.Null(loaded);
+                loaded.Should().BeNull();
             }
+        }
+
+
+        [Fact]
+        public void Can_read_Product_AutoFixture_FluentAss()
+        {
+            var fix = new Fixture();
+            fix.Customizations.Add(new PropertyNameOmitter("Id", nameof(Entity.IsDeleted)));
+            fix.Behaviors.Add(new OmitOnRecursionBehavior());
+
+            var prod = fix.Create<Produkt>();
+
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Add(prod);
+                con.SaveChanges();
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                var loaded = con.Produkte.Find(prod.Id);
+
+                loaded.Should().BeEquivalentTo(prod, x => x.IgnoringCyclicReferences());
+            }
+        }
+    }
+
+    internal class PropertyNameOmitter : ISpecimenBuilder
+    {
+        private readonly IEnumerable<string> names;
+
+        internal PropertyNameOmitter(params string[] names)
+        {
+            this.names = names;
+        }
+
+        public object Create(object request, ISpecimenContext context)
+        {
+            var propInfo = request as PropertyInfo;
+            if (propInfo != null && names.Contains(propInfo.Name))
+                return new OmitSpecimen();
+
+            return new NoSpecimen();
         }
     }
 }
