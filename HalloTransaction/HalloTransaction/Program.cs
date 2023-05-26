@@ -1,7 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Microsoft.Data.SqlClient;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 Console.OutputEncoding = Encoding.UTF8;
@@ -15,6 +13,8 @@ var cmd = con.CreateCommand();
 cmd.CommandText = "SELECT * FROM BestellPositionen";
 var dict = new Dictionary<int, decimal>();
 
+var trans = con.BeginTransaction(System.Data.IsolationLevel.Serializable);
+cmd.Transaction=trans;
 using (var reader = cmd.ExecuteReader())
 {
     while (reader.Read())
@@ -25,8 +25,6 @@ using (var reader = cmd.ExecuteReader())
         dict.Add(id, price);
     }
 }
-
-var trans = con.BeginTransaction();
 
 try
 {
@@ -58,5 +56,3 @@ catch (Exception e)
     Console.WriteLine($"FEHELER: {e.Message}");
     trans.Rollback();
 }
-
-
