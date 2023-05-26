@@ -16,7 +16,7 @@ namespace ppedv.ByteBay.Core
 
         public Bestellung? GetMostExpensiveOrderOfToday(DateTime datetime)
         {
-            return repo?.GetAll<Bestellung>()
+            return repo?.Query<Bestellung>()
                        .Where(x => x.BestellDatum.Date == datetime.Date)
                        .OrderByDescending(x => x.Positionen.Sum(y => y.Preis * y.Menge))
                        .FirstOrDefault();

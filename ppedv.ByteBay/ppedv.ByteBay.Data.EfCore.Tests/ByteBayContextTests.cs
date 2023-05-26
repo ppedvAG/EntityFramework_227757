@@ -3,10 +3,7 @@ using AutoFixture.Kernel;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ppedv.ByteBay.Model;
-using System.Diagnostics;
 using System.Reflection;
-using System.Reflection.Metadata;
-using System.Security.Cryptography;
 using System.Text;
 using System.Transactions;
 
@@ -14,7 +11,7 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
 {
     public class ByteBayContextTests
     {
-        string conString = "Server=(localdb)\\mssqllocaldb;Database=ByteBay_test;Trusted_Connection=true";
+        string conString = "Server=(localdb)\\mssqllocaldb;Database=ByteBay_test    ;Trusted_Connection=true";
 
         [Fact]
         public void Can_create_Db()

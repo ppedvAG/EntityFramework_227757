@@ -10,7 +10,7 @@ namespace ppedv.ByteBay.Core.Tests
         public void GetMostExpensiveOrderOfToday_Moq()
         {
             var mock = new Mock<IRepository>();
-            mock.Setup(x => x.GetAll<Bestellung>()).Returns(() =>
+            mock.Setup(x => x.Query<Bestellung>()).Returns(() =>
             {
                 var p = new Produkt();
                 var b1 = new Bestellung() { BestellDatum = DateTime.Now, Id = 1 };
@@ -28,7 +28,7 @@ namespace ppedv.ByteBay.Core.Tests
                 b3.Positionen.Add(new BestellPosition { Bestellung = b3, Produkt = p, Preis = 5m, Menge = 100 });
                 b3.Positionen.Add(new BestellPosition { Bestellung = b3, Produkt = p, Preis = 8m, Menge = 1 });
 
-                return new[] { b1, b2, b3 }.ToList();
+                return new[] { b1, b2, b3 }.AsQueryable();
             });
 
             var service = new OrderService(mock.Object);
@@ -82,7 +82,7 @@ namespace ppedv.ByteBay.Core.Tests
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> GetAll<T>() where T : Entity
+        public IQueryable<T> Query<T>() where T : Entity
         {
             if (typeof(T).IsAssignableFrom(typeof(Bestellung)))
             {
@@ -102,7 +102,7 @@ namespace ppedv.ByteBay.Core.Tests
                 b3.Positionen.Add(new BestellPosition { Bestellung = b3, Produkt = p, Preis = 5m, Menge = 100 });
                 b3.Positionen.Add(new BestellPosition { Bestellung = b3, Produkt = p, Preis = 8m, Menge = 1 });
 
-                return new[] { b1, b2, b3 }.Cast<T>().ToList();
+                return new[] { b1, b2, b3 }.Cast<T>().AsQueryable();
             }
 
             throw new NotImplementedException();

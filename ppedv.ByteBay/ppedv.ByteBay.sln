@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.ByteBay.Core", "ppedv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.ByteBay.Core.Tests", "ppedv.ByteBay.Core.Tests\ppedv.ByteBay.Core.Tests.csproj", "{0C2404B7-5197-4C43-9860-70F0D6F8078B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.ByteBay.UI.TestConsole", "ppedv.ByteBay.UI.TestConsole\ppedv.ByteBay.UI.TestConsole.csproj", "{9D2EA185-6B35-4382-B27A-381B22D3A3FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0C2404B7-5197-4C43-9860-70F0D6F8078B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C2404B7-5197-4C43-9860-70F0D6F8078B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C2404B7-5197-4C43-9860-70F0D6F8078B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D2EA185-6B35-4382-B27A-381B22D3A3FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D2EA185-6B35-4382-B27A-381B22D3A3FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D2EA185-6B35-4382-B27A-381B22D3A3FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D2EA185-6B35-4382-B27A-381B22D3A3FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
