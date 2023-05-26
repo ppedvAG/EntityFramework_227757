@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Query;
 using ppedv.ByteBay.Model;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Net.Http.Headers;
 
 namespace ppedv.ByteBay.Data.EfCore
 {

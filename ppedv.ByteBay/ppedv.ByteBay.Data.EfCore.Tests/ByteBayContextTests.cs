@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using ppedv.ByteBay.Model;
 using System.Diagnostics;
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Security.Cryptography;
 using System.Text;
 using System.Transactions;
 
@@ -457,9 +459,9 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
             {
                 //Can_read_Product_AutoFixture_FluentAss();
 
-                var grpQuery = con.Bestellung.Include(x=>x.Positionen)
+                var grpQuery = con.Bestellung.Include(x => x.Positionen)
                                              .GroupBy(x => x.BestellDatum.Month)
-                                             .Select(x => new { Monat = x.Key, Bests = x.OrderByDescending(x => x.Positionen.Sum(y=>y.Preis)).ToList() })
+                                             .Select(x => new { Monat = x.Key, Bests = x.OrderByDescending(x => x.Positionen.Sum(y => y.Preis)).ToList() })
                                              .OrderByDescending(x => x.Monat);
 
                 foreach (var day in grpQuery.ToList())
@@ -468,7 +470,7 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
 
                     foreach (var b in day.Bests)
                     {
-                        sb.AppendLine($"\t {b.BestellDatum} {b.Positionen.Sum(x=>x.Preis)}");
+                        sb.AppendLine($"\t {b.BestellDatum} {b.Positionen.Sum(x => x.Preis)}");
                     }
                 }
                 //foreach (var day in grpQuery)
@@ -486,6 +488,56 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
             throw new Exception(sb.ToString());
         }
 
+        [Fact]
+        public void GetAllBestellungenOFProdct()
+        {
+            using (var con = new ByteBayContext(conString))
+
+            {
+                var b1 = con.Bestellung.FirstOrDefault().Positionen.Select(x => x.Produkt.Lieferanten).ToList();
+
+                //var liefers = b1.Positionen.SelectMany(x => x.Produkt.Lieferanten);
+
+            }
+        }
+
+
+        [Fact]
+        public void Get_Join()
+        {
+
+            List<Tuple<int, string>> zeug = new List<Tuple<int, string>>();
+            zeug.Add(new Tuple<int, string>(1, "Toll"));
+            zeug.Add(new Tuple<int, string>(2, "Fein"));
+            zeug.Add(new Tuple<int, string>(3, "Gut"));
+            zeug.Add(new Tuple<int, string>(4, "Hübsch"));
+
+            using (var con = new ByteBayContext(conString))
+            {
+
+                var kunden = con.Adressen.Where(x => x.Id >= 1 && x.Id < 5).ToList();
+
+                var beurteilung = kunden.Join(zeug, x => x.Id, x => x.Item1, (x, y) => new { Kunde = x, Text = y.Item2 });
+
+            }
+        }
+
+        [Fact]
+        public void Get_Join2222()
+        {
+
+      
+            using (var con = new ByteBayContext(conString))
+            {
+                var query = from b in con.Set<Adresse>()
+                            from p in con.Set<Produkt>()
+                            select new { b, p };
+
+
+
+                var r = query.ToList();
+            }
+        }
 
 
     }
