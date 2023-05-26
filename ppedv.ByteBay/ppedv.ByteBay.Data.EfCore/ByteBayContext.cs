@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using ppedv.ByteBay.Model;
+using ppedv.ByteBay.Model.Contracts;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
