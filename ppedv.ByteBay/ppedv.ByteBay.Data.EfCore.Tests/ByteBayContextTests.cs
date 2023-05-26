@@ -3,7 +3,9 @@ using AutoFixture.Kernel;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ppedv.ByteBay.Model;
+using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 using System.Transactions;
 
 namespace ppedv.ByteBay.Data.EfCore.Tests
@@ -441,6 +443,47 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
                 con.Produkte.Find(prod2.Id).Farbe.Should().Be("rot");
             }
 
+
+
+        }
+
+
+        [Fact]
+        public void Fun_with_Group()
+        {
+
+            StringBuilder sb = new StringBuilder();
+            using (var con = new ByteBayContext(conString))
+            {
+                //Can_read_Product_AutoFixture_FluentAss();
+
+                var grpQuery = con.Bestellung.Include(x=>x.Positionen)
+                                             .GroupBy(x => x.BestellDatum.Month)
+                                             .Select(x => new { Monat = x.Key, Bests = x.OrderByDescending(x => x.Positionen.Sum(y=>y.Preis)).ToList() })
+                                             .OrderByDescending(x => x.Monat);
+
+                foreach (var day in grpQuery.ToList())
+                {
+                    sb.AppendLine(day.Monat.ToString());
+
+                    foreach (var b in day.Bests)
+                    {
+                        sb.AppendLine($"\t {b.BestellDatum} {b.Positionen.Sum(x=>x.Preis)}");
+                    }
+                }
+                //foreach (var day in grpQuery)
+                //{
+                //    sb.AppendLine(day.Key.ToString());
+
+                //    foreach (var b in day)
+                //    {
+                //        sb.AppendLine($"\t {b.BestellDatum}");
+                //    }
+                //}
+
+            }
+
+            throw new Exception(sb.ToString());
         }
 
 
