@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using ppedv.ByteBay.Model;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
 
 namespace ppedv.ByteBay.Data.EfCore
 {
@@ -41,7 +42,7 @@ namespace ppedv.ByteBay.Data.EfCore
                     entity.IsDeleted = true;
                     item.State = EntityState.Modified;
 
-                    if(entity is Bestellung best)
+                    if (entity is Bestellung best)
                     {
                         foreach (var pos in best.Positionen)
                         {
@@ -50,15 +51,22 @@ namespace ppedv.ByteBay.Data.EfCore
                     }
                 }
             }
+
+            foreach (var item in ChangeTracker.Entries().Where(x => x.State == EntityState.Modified))
+            {
+                if (item.Entity is Entity entity)
+                    entity.Modified = DateTime.Now;
+            }
             return base.SaveChanges();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<Entity>().HasQueryFilter(x => !x.IsDeleted);
-            
-            
+
+
             Expression<Func<Entity, bool>> filterExpr = entity => !entity.IsDeleted;
+
             foreach (var mutableEntityType in modelBuilder.Model.GetEntityTypes())
             {
                 // check if current entity type is child of BaseModel
@@ -73,6 +81,11 @@ namespace ppedv.ByteBay.Data.EfCore
                     mutableEntityType.SetQueryFilter(lambdaExpression);
                 }
             }
+
+            
+            //todo für alle Entity machen!
+            modelBuilder.Entity<Produkt>().Property(x => x.Modified)
+                                         .IsConcurrencyToken();
 
             modelBuilder.Entity<Bestellung>().ToTable("Orders");
 
@@ -90,7 +103,7 @@ namespace ppedv.ByteBay.Data.EfCore
 
             modelBuilder.Entity<Bestellung>().HasMany(x => x.Positionen)
                                              .WithOne(x => x.Bestellung);
-                                             //.OnDelete(DeleteBehavior.Cascade);
+            //.OnDelete(DeleteBehavior.Cascade);
 
             //modelBuilder.Entity<Adresse>().HasMany(x => x.BestellungenAlsLieferadresse)
             //                              .WithOne(x => x.Lieferadresse);

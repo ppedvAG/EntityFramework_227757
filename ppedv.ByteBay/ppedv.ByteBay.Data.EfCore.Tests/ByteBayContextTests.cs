@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ppedv.ByteBay.Model;
 using System.Reflection;
+using System.Transactions;
 
 namespace ppedv.ByteBay.Data.EfCore.Tests
 {
@@ -208,7 +209,7 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
                 con.Bestellung.IgnoreQueryFilters().FirstOrDefault(x => x.Id == best.Id).IsDeleted.Should().BeTrue();
                 con.BestellPositionen.IgnoreQueryFilters().FirstOrDefault(x => x.Id == pos1.Id).IsDeleted.Should().BeTrue();
                 con.BestellPositionen.IgnoreQueryFilters().FirstOrDefault(x => x.Id == pos2.Id).IsDeleted.Should().BeTrue();
-                
+
                 con.Produkte.IgnoreQueryFilters().FirstOrDefault(x => x.Id == prod.Id).IsDeleted.Should().BeFalse();
             }
         }
@@ -273,6 +274,176 @@ namespace ppedv.ByteBay.Data.EfCore.Tests
                 loadedWithoutFilter.Should().NotBeNull();
             }
         }
+
+        [Fact]
+        public void Update_Produkt_and_other_update_should_thow_DbUpdateConcurrencyException()
+        {
+            var prod = new Produkt() { Farbe = "Gelb", Gewicht = 12.60, Name = $"Dings_{Guid.NewGuid()}" };
+            var newName = $"Bums_{Guid.NewGuid()}";
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Database.EnsureCreated();
+                con.Add(prod);
+                con.SaveChanges();
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                var loaded = con.Produkte.Find(prod.Id);
+                using (var con2 = new ByteBayContext(conString))
+                {
+                    var otherProd = con2.Produkte.Find(prod.Id);
+                    //loaded2.Modified = DateTime.Now;
+                    otherProd.Farbe = "blau";
+                    con2.SaveChanges();
+                }
+
+                loaded.Name = newName;
+                Action act = () => con.SaveChanges();
+                act.Should().Throw<DbUpdateConcurrencyException>();
+            }
+        }
+
+
+        [Fact]
+        public void Update_Produkt_and_other_update_should_thow_DbUpdateConcurrencyException_then_DB_wins()
+        {
+            var prod = new Produkt() { Farbe = "Gelb", Gewicht = 12.60, Name = $"Dings_{Guid.NewGuid()}" };
+            var newName = $"Bums_{Guid.NewGuid()}";
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Database.EnsureCreated();
+                con.Add(prod);
+                con.SaveChanges();
+            }
+
+            using (var con = new ByteBayContext(conString)) //User 1
+            {
+                var loaded = con.Produkte.Find(prod.Id);
+
+                using (var con2 = new ByteBayContext(conString)) //User 2 (DB)
+                {
+                    var otherProd = con2.Produkte.Find(prod.Id);
+                    otherProd.Farbe = "blau";
+                    con2.SaveChanges();
+                }
+
+                loaded.Name = newName;
+                Action act = () => con.SaveChanges();
+                act.Should().Throw<DbUpdateConcurrencyException>();
+
+                con.Produkte.Find(prod.Id).Farbe.Should().Be("Gelb");
+                con.Entry(loaded).Reload(); //DB WINS: lokaler context bekommt hier die Daten auf der DB
+                con.Produkte.Find(prod.Id).Farbe.Should().Be("blau");
+                con.Produkte.Find(prod.Id).Name.Should().Be(prod.Name);
+            }
+        }
+
+        [Fact]
+        public void Update_Produkt_and_other_update_should_thow_DbUpdateConcurrencyException_then_User_wins()
+        {
+            var prod = new Produkt() { Farbe = "Gelb", Gewicht = 12.60, Name = $"Dings_{Guid.NewGuid()}" };
+            var newName = $"Bums_{Guid.NewGuid()}";
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Database.EnsureCreated();
+                con.Add(prod);
+                con.SaveChanges();
+            }
+
+            using (var con = new ByteBayContext(conString)) //User 1
+            {
+                var loaded = con.Produkte.Find(prod.Id);
+
+                using (var con2 = new ByteBayContext(conString)) //User 2 (DB)
+                {
+                    var otherProd = con2.Produkte.Find(prod.Id);
+                    otherProd.Farbe = "blau";
+                    con2.SaveChanges();
+                }
+
+                loaded.Name = newName;
+                Action act = () => con.SaveChanges();
+                act.Should().Throw<DbUpdateConcurrencyException>();
+
+
+                con.Entry(loaded).OriginalValues.SetValues(con.Entry(loaded).GetDatabaseValues()); //User win, originale werden aus DB geholt
+                con.SaveChanges();
+
+                con.Produkte.Find(prod.Id).Farbe.Should().Be("Gelb");
+                con.Produkte.Find(prod.Id).Name.Should().Be(newName);
+
+            }
+        }
+
+        [Fact]
+        public void Two_Contexts_in_one_TransactionScope_Trans_dispose()
+        {
+            var prod1 = new Produkt() { Farbe = "grün", Gewicht = 12.60, Name = $"Dings_{Guid.NewGuid()}" };
+            var prod2 = new Produkt() { Farbe = "blau", Gewicht = 12.60, Name = $"Dings_{Guid.NewGuid()}" };
+            using (var conArrange = new ByteBayContext(conString))
+            {
+                conArrange.Database.EnsureCreated();
+                conArrange.Add(prod1);
+                conArrange.Add(prod2);
+                conArrange.SaveChanges();
+            }
+
+            using (var scope = new TransactionScope())
+            {
+                using var con1 = new ByteBayContext(conString);
+                con1.Produkte.Find(prod1.Id).Farbe = "rot";
+                con1.SaveChanges();
+
+                using var con2 = new ByteBayContext(conString);
+                con2.Produkte.Find(prod2.Id).Farbe = "rot";
+                con2.SaveChanges();
+
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Produkte.Find(prod1.Id).Farbe.Should().Be("grün");
+                con.Produkte.Find(prod2.Id).Farbe.Should().Be("blau");
+            }
+
+        }
+
+        [Fact]
+        public void Two_Contexts_in_one_TransactionScope_Trans_Complete()
+        {
+            var prod1 = new Produkt() { Farbe = "grün", Gewicht = 12.60, Name = $"Dings_{Guid.NewGuid()}" };
+            var prod2 = new Produkt() { Farbe = "blau", Gewicht = 12.60, Name = $"Dings_{Guid.NewGuid()}" };
+            using (var conArrange = new ByteBayContext(conString))
+            {
+                conArrange.Database.EnsureCreated();
+                conArrange.Add(prod1);
+                conArrange.Add(prod2);
+                conArrange.SaveChanges();
+            }
+
+            using (var scope = new TransactionScope())
+            {
+                using var con1 = new ByteBayContext(conString);
+                con1.Produkte.Find(prod1.Id).Farbe = "rot";
+                con1.SaveChanges();
+
+                using var con2 = new ByteBayContext(conString);
+                con2.Produkte.Find(prod2.Id).Farbe = "rot";
+                con2.SaveChanges();
+
+                scope.Complete();
+            }
+
+            using (var con = new ByteBayContext(conString))
+            {
+                con.Produkte.Find(prod1.Id).Farbe.Should().Be("rot");
+                con.Produkte.Find(prod2.Id).Farbe.Should().Be("rot");
+            }
+
+        }
+
+
 
     }
 
